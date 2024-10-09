@@ -9,8 +9,17 @@
 </head>
 <body>
 	<div class="container">
-		<div>
+		<div id="title">
 			<h1>Simplified Steam Reviews</h1>
+		</div>
+		<div id="description">
+			<!-- NOTE: the following descriptioin is long on purpose to allow the "Read Aloud" feature on Chrome browsers, which becomes available only if the first paragraph of the website is at least 270 characters long -->
+			<p>
+				<span>A simple visualizer for Steam user reviews.</span>
+				<span>Enter the Steam Game ID or URL, select the type of reviews you want to filter for (All, Positive, Negative), check the "English Only" box to only get english reviews.</span>
+				<span>Click the "GET REVIEWS" button to get the reviews for the chosen game.</span>
+				<span>Select the sorting mode (Most Recent, Least Recent) to sort the reviews results.</span>
+			</p>
 		</div>
 		<!-- Form to make a request to the server -->
 		<div>
@@ -44,6 +53,7 @@
 			   </div>
 			</form>
 		</div>
+		
 		<div id="reviews-container">
 			<!-- Reviews will be displayed here -->
 			 <!-- <div class="review">

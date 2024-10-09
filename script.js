@@ -99,8 +99,10 @@ function displayReviews() {
 		let textElement = document.createElement("div");
 		textElement.classList.add("text");
 		// Convert the text to HTML with also newlines, spaces, tabs, etc.
-		text = text.replace(/\n/g, "<br>").replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
-		textElement.innerHTML = text;
+		text = text.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
+		let text_lines = text.split("\n");
+		text = text_lines.join("</p><br/><p>");
+		textElement.innerHTML = "<p>" + text + "</p>";
 		// Append the username, date and recommended elements
 		firstDivElement.appendChild(usernameElement);
 		firstDivElement.appendChild(dateRecommendedElement);
