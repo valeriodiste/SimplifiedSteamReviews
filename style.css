@@ -1,0 +1,207 @@
+* {
+	box-sizing: border-box;
+}
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 16px;
+	color: #eaeaea;
+	background-color: #111111;
+}
+::-webkit-scrollbar {
+	width: 10px;
+}
+::-webkit-scrollbar-track {
+	background-color: #111111;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #ffffff40;
+	border-radius: 0px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: #ffffff30;
+}
+::-webkit-scrollbar-thumb:active {
+	background-color: #ffffff20;
+}
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	padding: 0;
+}
+h1 {
+	width: 100%;
+	text-align: center;
+}
+.container {
+	padding: 20px 0;
+	width: 100%;
+	max-width: 500px;
+	margin: 0 auto;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.container > div {
+	width: 92%;
+	margin: 10px auto;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+form {
+	width: 100%;
+	background-color: #ffffff15;
+	padding: 16px 14px;
+	border-radius: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+form > div {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+form > div:not(:last-child) {
+	margin-bottom: 8px;
+}
+form > div > div {
+	width: 100%;
+	display: flex;
+	justify-content: first baseline;
+	align-items: center;
+	align-content: center;
+	font-size: 0.9em;
+}
+input[type="text"] {
+	width: 71.25%;
+	border: none;
+	font-size: 0.9em;
+	border-radius: 5px;
+	padding: 8px 10px;
+}
+input[type="text"]:focus {
+	outline: none;
+	border: none;
+}
+button {
+	border: none;
+	border-radius: 5px;
+	padding: 8px 10px;
+	font-size: 0.9em;
+	background-color: #ffffff40;
+	color: #eaeaea;
+	cursor: pointer;
+	/* font-weight: bold; */
+}
+button:hover {
+	background-color: #ffffff30;
+}
+button:active {
+	background-color: #ffffff20;
+}
+input[type="checkbox"] {
+	width: 1.1em;
+	height: 1.1em;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin: 0;
+	margin-right: 5px;
+}
+input[type="checkbox"]:focus {
+	outline: none;
+	border: none;
+}
+select {
+	width: 100%;
+	border: none;
+	border-radius: 5px;
+	padding: 5px 8px;
+	margin-left: 5px;
+}
+select:focus {
+	outline: none;
+	border: none;
+}
+#reviews-container {
+	/* width: 100%; */
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+.review {
+	width: 100%;
+	background-color: #ffffff15;
+	padding: 12px 14px;
+	border-radius: 15px;
+	font-size: 0.9em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 8px;
+}
+.review > div {
+	width: 100%;
+	text-align: left;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+.review > div > div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
+}
+.review > div:nth-child(1) {
+	margin-bottom: 8px;
+}
+.review .username {
+	all: unset;
+	font-weight: bold;
+	text-decoration: underline;
+}
+.review .username:hover,
+.review .username:focus {
+	color: #eaeaea55;
+	cursor: pointer;
+	/* text-decoration: underline; */
+}
+.review .date {
+	color: #eaeaea55;
+	font-weight: bold;
+}
+.review .recommended {
+	all: unset;
+	margin-left: 5px;
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 50%;
+	cursor: pointer;
+}
+.review .text {
+	/* Wrap if needed, but don't break words */
+	white-space: wrap;
+}
+.review .recommended.positive {
+	background-color: #00ff00;
+}
+.review .recommended.negative {
+	background-color: #ff0000;
+}
+.review .recommended:hover,
+.review .recommended:focus {
+	background-color: #ffffff70;
+}

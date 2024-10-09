@@ -1,0 +1,62 @@
+<!-- Simple app that retrieves Steam user reviews for a game and displays them -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Simplified Steam Reviews</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<div>
+			<h1>Simplified Steam Reviews</h1>
+		</div>
+		<!-- Form to make a request to the server -->
+		<div>
+			<form id="form">
+				<div>
+					<!-- Checkbox to define if we want only english reviews -->
+					 <div>
+						 <input type="checkbox" id="english-only" name="english-only" value="english-only" checked>
+						 <label for="english-only">English Only</label>
+					</div>
+					<!-- Select field to choose the review type (ALL, POSITIVE, NEGATIVE) -->
+					 <div>
+						 <select id="review-type" name="review-type">
+							 <option value="all">All Reviews</option>
+							 <option value="positive">Positive Reviews</option>
+							 <option value="negative">Negative Reviews</option>
+						</select>
+					 </div>
+					 <!-- Select field for the reviews sorting mode -->
+					 <div>
+						 <select id="sort-by">
+							 <option value="recent">Most Recent</option>
+							 <option value="oldest">Least Recent</option>
+						</select>
+					 </div>
+				</div>
+				<div>
+					<!-- Input field to get the game ID or URL -->
+					<input type="text" id="game-id" name="game" required placeholder="Steam Game ID or URL">
+					<button type="submit" id="submit">GET REVIEWS</button>
+			   </div>
+			</form>
+		</div>
+		<div id="reviews-container">
+			<!-- Reviews will be displayed here -->
+			 <!-- <div class="review">
+				<div>
+					<a class="username" href="./">@username</a>
+					<div>
+						<div class="date">10-01-2024</div>
+						<a class="recommended positive" href="./"></a>
+					</div>
+				</div>
+				<div class="text">
+					Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.
+				</div>
+			 </div> -->
+		</div>
+	</div>
+	<script src="script.js"></script>
+</html>
