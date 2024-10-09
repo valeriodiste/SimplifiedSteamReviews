@@ -221,6 +221,11 @@ select:focus {
 .review .text {
 	/* Wrap if needed, but don't break words */
 	white-space: wrap;
+	display: flex;
+	flex-direction: column;
+	justify-content: first baseline;
+	align-items: first baseline;
+	align-content: first baseline;
 }
 .review .recommended.positive {
 	background-color: #00ff00;
@@ -241,6 +246,7 @@ select:focus {
 	} */
 }
 p {
+	all: unset;
 	margin: 0;
 	padding: 0;
 }
