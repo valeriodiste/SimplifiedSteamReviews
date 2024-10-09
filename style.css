@@ -64,6 +64,11 @@ h1 {
 	font-size: 0.75em;
 	padding: 0em 0.25em;
 	text-align: justify;
+	display: flex;
+	flex-direction: column;
+}
+#description > p {
+	margin-top: 0.5em;
 }
 #description span {
 	display: block;
@@ -95,7 +100,7 @@ form > div {
 	align-content: center;
 }
 form > div:not(:last-child) {
-	margin-bottom: 0.5em
+	margin-bottom: 0.5em;
 }
 form > div > div {
 	width: 100%;
@@ -104,6 +109,9 @@ form > div > div {
 	align-items: center;
 	align-content: center;
 	font-size: 0.9em;
+}
+form > div > div:first-child {
+	margin-right: 0.5em;
 }
 input[type="text"] {
 	width: 71.25%;
@@ -152,7 +160,7 @@ select {
 	border-radius: 0.3125em;
 	padding: 0.3125em 0.5em;
 	font-size: 0.9em;
-	margin-left: 0.3125em;
+	margin-right: 0.3125em;
 }
 select:focus {
 	outline: none;

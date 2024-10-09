@@ -51,6 +51,17 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("sort-by").addEventListener("change", function () {
 		displayReviews();
 	});
+	// On click on the "read-aloud" button, read the reviews aloud
+	// document.getElementById("read-aloud").addEventListener("click", function () {
+	// 	// Get the text of the reviews
+	// 	let reviewsText = reviews.slice(0, 10).map(review => review["review"]).join(". . .");
+	// 	// Create a new SpeechSynthesisUtterance object
+	// 	let utterance = new SpeechSynthesisUtterance(reviewsText, { lang: "en-US" }, { rate: 1 });
+	// 	// Speak the text
+	// 	window.speechSynthesis.speak(utterance);
+	// 	// Debug a message
+	// 	console.log("Reading reviews aloud...");
+	// });
 });
 
 // Function to display the reviews
@@ -90,7 +101,7 @@ function displayReviews() {
 		let recommendedElement = document.createElement("a");
 		recommendedElement.classList.add("recommended");
 		recommendedElement.classList.add(recommended ? "positive" : "negative");
-		recommendedElement.src = "https://steamcommunity.com/profiles/" + username + "/recommended/" + lastAppid + "/"
+		recommendedElement.href = "https://steamcommunity.com/profiles/" + username + "/recommended/" + lastAppid + "/"
 		recommendedElement.target = "_blank";
 		// Append the date and recommended elements
 		dateRecommendedElement.appendChild(dateElement);
