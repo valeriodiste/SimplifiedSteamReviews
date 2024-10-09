@@ -5,12 +5,15 @@ html, body {
 	margin: 0;
 	padding: 0;
 	font-family: 'Open Sans', sans-serif;
-	font-size: 16px;
 	color: #eaeaea;
 	background-color: #111111;
 }
+body {
+	font-size: 16px;
+	overflow-x: hidden;
+}
 ::-webkit-scrollbar {
-	width: 10px;
+	width: 0.625em;
 }
 ::-webkit-scrollbar-track {
 	background-color: #111111;
@@ -34,9 +37,9 @@ h1 {
 	text-align: center;
 }
 .container {
-	padding: 20px 0;
+	padding: 1.25em 0;
 	width: 100%;
-	max-width: 500px;
+	max-width: 31.25em;
 	margin: 0 auto;
 	overflow: hidden;
 	display: flex;
@@ -46,7 +49,7 @@ h1 {
 }
 .container > div {
 	width: 92%;
-	margin: 10px auto;
+	margin: 0.625em auto;
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -55,8 +58,8 @@ h1 {
 form {
 	width: 100%;
 	background-color: #ffffff15;
-	padding: 16px 14px;
-	border-radius: 15px;
+	padding: 1em 0.875em;
+	border-radius: 0.9375em;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -70,7 +73,7 @@ form > div {
 	align-content: center;
 }
 form > div:not(:last-child) {
-	margin-bottom: 8px;
+	margin-bottom: 0.5em
 }
 form > div > div {
 	width: 100%;
@@ -84,8 +87,8 @@ input[type="text"] {
 	width: 71.25%;
 	border: none;
 	font-size: 0.9em;
-	border-radius: 5px;
-	padding: 8px 10px;
+	border-radius: 0.3125em;
+	padding: 0.5em 0.625em;
 }
 input[type="text"]:focus {
 	outline: none;
@@ -93,8 +96,8 @@ input[type="text"]:focus {
 }
 button {
 	border: none;
-	border-radius: 5px;
-	padding: 8px 10px;
+	border-radius: 0.3125em;
+	padding: 0.5em 0.625em;
 	font-size: 0.9em;
 	background-color: #ffffff40;
 	color: #eaeaea;
@@ -108,13 +111,14 @@ button:active {
 	background-color: #ffffff20;
 }
 input[type="checkbox"] {
+	font-size: 0.8em;
 	width: 1.1em;
 	height: 1.1em;
 	border: none;
-	border-radius: 5px;
+	border-radius: 0.3125em;
 	cursor: pointer;
 	margin: 0;
-	margin-right: 5px;
+	margin-right: 0.3125em;
 }
 input[type="checkbox"]:focus {
 	outline: none;
@@ -123,9 +127,10 @@ input[type="checkbox"]:focus {
 select {
 	width: 100%;
 	border: none;
-	border-radius: 5px;
-	padding: 5px 8px;
-	margin-left: 5px;
+	border-radius: 0.3125em;
+	padding: 0.3125em 0.5em;
+	font-size: 0.9em;
+	margin-left: 0.3125em;
 }
 select:focus {
 	outline: none;
@@ -142,14 +147,14 @@ select:focus {
 .review {
 	width: 100%;
 	background-color: #ffffff15;
-	padding: 12px 14px;
-	border-radius: 15px;
+	padding: 0.75em 0.875em;
+	border-radius: 0.9375em;
 	font-size: 0.9em;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	margin-bottom: 8px;
+	margin-bottom: 0.5em;
 }
 .review > div {
 	width: 100%;
@@ -166,7 +171,7 @@ select:focus {
 	align-content: center;
 }
 .review > div:nth-child(1) {
-	margin-bottom: 8px;
+	margin-bottom: 0.5em;
 }
 .review .username {
 	all: unset;
@@ -185,7 +190,7 @@ select:focus {
 }
 .review .recommended {
 	all: unset;
-	margin-left: 5px;
+	margin-left: 0.5em;
 	width: 1.5em;
 	height: 1.5em;
 	border-radius: 50%;
@@ -204,4 +209,12 @@ select:focus {
 .review .recommended:hover,
 .review .recommended:focus {
 	background-color: #ffffff70;
+}
+@media screen and (max-width: 1100px) {
+	body {
+		font-size: 35px;
+	}
+	/* .container {
+		max-width: 100%;
+	} */
 }
