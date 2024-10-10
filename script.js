@@ -57,7 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("download").addEventListener("click", function () {
 		// Create a new tab with the reviews in a new tab (in their simple format)
 		let newTab = window.open();
-		let newTabHTML = "<html><head><title>Reviews</title></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px;\"><div id='reviews-container'>" + getReviewsHTML(true) + "</div></body></html>";
+		let addLoremIpsum = true;
+		let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+		let newTabHTML =
+			"<html style='margin: 0; color: white;'><head><title>Reviews</title><style>*{ box-sizing: border-box;}</style></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\">" +
+			(addLoremIpsum ? "<p>" + loremIpsumText + "</p>" : "") +
+			"<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div></body></html>";
 		newTab.document.write(newTabHTML);
 		// Notify that the new document is ready (stop loading)
 		newTab.document.close();
@@ -184,10 +189,21 @@ function getReviewsHTML(simpleFormat = false) {
 			text = "<p><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></p><p>" + text + "</p>";
 			// Add a dim background color based on the recommendation
 			reviewElement.style.color = "white";
-			reviewElement.style.backgroundColor = recommended ? "#00ff0030" : "#ff000040";
+			reviewElement.style.fontSize = "1em";
+			reviewElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
 			reviewElement.style.padding = "0.1em 1em";
 			reviewElement.style.borderRadius = "0.5em";
-			reviewElement.style.marginBottom = "0.25em";
+			reviewElement.style.margin = "0 auto";
+			reviewElement.style.marginBottom = "0.5em";
+			reviewElement.style.width = "100%";
+			textElement.style.margin = "0";
+			textElement.style.padding = "0";
+			textElement.style.fontSize = "1em";
+			textElement.style.fontWeight = "normal";
+			textElement.style.lineHeight = "1.5em";
+			textElement.style.whiteSpace = "wrap";
+			textElement.style.wordWrap = "break-word";
+			textElement.width = "100%";
 		}
 		textElement.innerHTML = text;
 		// Append the username, date and recommended elements
