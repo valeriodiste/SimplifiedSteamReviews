@@ -137,10 +137,18 @@ function getSimpleReviewsPageHTML() {
 	let loremIpsumTitle = "Reviews";
 	let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 	let newTabHTML =
-		"<html style='margin: 0; color: white;'><head><title>Reviews</title><style>*{ box-sizing: border-box;}</style></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
+		"<html style='margin: 0; color: white;'>" +
+		"<head>" +
+		"<title>Reviews</title>" +
+		"<style>*{ box-sizing: border-box;}</style>" +
+		"</head>" +
+		"<body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
 		(addLoremIpsum ? "<h2>" + loremIpsumTitle + "</h2><p>" + loremIpsumText + "</p>" : "") +
-		"<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div>" +
-		"</article></body></html>";
+		// "<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div>" +
+		getReviewsHTML(true) +
+		"</article>" +
+		"</body>" +
+		"</html>";
 	return newTabHTML;
 }
 
@@ -266,31 +274,28 @@ function getReviewsHTML(simpleFormat = false) {
 			// text = "<p><b>" + number + " | " + recommendedText + "</b> (" + date + ")</p><p>" + text + "</p>";
 			text = "<p><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></p><p>" + text + "</p>";
 			// Add a dim background color based on the recommendation
-			reviewElement.style.color = "white";
-			reviewElement.style.fontSize = "1em";
-			reviewElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
-			reviewElement.style.padding = "0.1em 1em";
-			reviewElement.style.borderRadius = "0.5em";
-			reviewElement.style.margin = "0 auto";
-			reviewElement.style.marginBottom = "0.5em";
-			reviewElement.style.width = "100%";
-			textElement.style.margin = "0";
-			textElement.style.padding = "0";
+			textElement.style.color = "white";
+			textElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
+			textElement.style.padding = "0.1em 1em";
+			textElement.style.borderRadius = "0.5em";
+			textElement.style.margin = "0 auto";
+			textElement.style.marginBottom = "0.5em";
+			textElement.style.width = "100%";
 			textElement.style.fontSize = "1em";
 			textElement.style.fontWeight = "normal";
 			textElement.style.lineHeight = "1.5em";
 			textElement.style.whiteSpace = "wrap";
 			textElement.style.wordWrap = "break-word";
-			textElement.width = "100%";
 		}
 		textElement.innerHTML = text;
 		// Append the username, date and recommended elements
 		firstDivElement.appendChild(usernameElement);
 		firstDivElement.appendChild(dateRecommendedElement);
 		// Append the first div element and the text element
-		if (!simpleFormat) reviewElement.appendChild(firstDivElement);
+		reviewElement.appendChild(firstDivElement);
 		reviewElement.appendChild(textElement);
-		return reviewElement;
+		if (!simpleFormat) return reviewElement;
+		return textElement;
 	}
 	// Display the reviews in the "reviews" div
 	// let reviewsElement = document.getElementById("reviews-container");
