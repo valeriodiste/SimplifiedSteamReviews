@@ -133,17 +133,31 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function getSimpleReviewsPageHTML() {
-	let addLoremIpsum = true;
+	// Intruductory text/title
+	let showIntroductoryText = true;
+	let titleText = "Simplified Steam Reviews";
+	let reviewType = document.getElementsByName("review-type")[0].value;
+	let sortingCriteria = document.getElementById("sort-by").value;
+	let englishOnly = document.getElementsByName("english-only")[0].checked;
+	let appIdLinkElement = "<a href='https://store.steampowered.com/app/" + lastAppid + "' target='_blank' style='all:unset; text-decoration: underline; font-weight: bold; cursor:pointer;'>" + lastAppid + "</a>";
+	let description = "<b>List of " + reviewType.toString().toUpperCase() + " reviews for the game with appid \"" + appIdLinkElement + "\" (sorted by upload date, " + (sortingCriteria == "recent" ? "descending" : "ascending") + ").</b><br/>" + (englishOnly ? "NOTE: Only English reviews are displayed." : "Reviews in all languages are displayed.");
+	// Lorem ipsum text (to trigger chrome's reaed aloud features)
+	let addLoremIpsum = false;
 	let loremIpsumTitle = "Reviews";
 	let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+	// Get the HTML content to display in the new tab
 	let newTabHTML =
 		"<html style='margin: 0; color: white;'>" +
 		"<head>" +
 		"<title>Reviews</title>" +
-		"<style>*{ box-sizing: border-box;}</style>" +
+		"<style>*{ box-sizing: border-box;} span { display:inline-block; }</style>" +
 		"</head>" +
-		"<body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
-		(addLoremIpsum ? "<h2>" + loremIpsumTitle + "</h2><p>" + loremIpsumText + "</p>" : "") +
+		"<body style=\"background-color: #111111; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
+		(showIntroductoryText ?
+			"<h1>" + titleText + "</h1>" +
+			"<p>" + description + "</p>"
+			: (addLoremIpsum ? "<h1>" + loremIpsumTitle + "</h1><p>" + loremIpsumText + "</p>" : "")
+		) +
 		// "<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div>" +
 		getReviewsHTML(true) +
 		"</article>" +
@@ -272,18 +286,26 @@ function getReviewsHTML(simpleFormat = false) {
 			// Add an additional line with the reviews information (text "N) Recommended on DD-MM-YYYY")
 			let recommendedText = recommended ? "Recommended" : "NOT Recommended";
 			// text = "<p><b>" + number + " | " + recommendedText + "</b> (" + date + ")</p><p>" + text + "</p>";
-			text = "<span><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></span><span>" + text + "</span>";
+			text =
+				"<span>" +
+				"<b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span>" +
+				"</span>" +
+				// "<br/>" +
+				"<span style='display:block;margin-top:0.25em;'>" +
+				text +
+				"</span>";
 			// Add a dim background color based on the recommendation
 			textElement.style.color = "white";
+			textElement.style.display = "block";
+			textElement.style.fontSize = "1em";
 			textElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
-			textElement.style.padding = "0.1em 1em";
+			textElement.style.padding = "1em 1.3em";
 			textElement.style.borderRadius = "0.5em";
 			textElement.style.margin = "0 auto";
 			textElement.style.marginBottom = "0.5em";
 			textElement.style.width = "100%";
-			textElement.style.fontSize = "1em";
 			textElement.style.fontWeight = "normal";
-			textElement.style.lineHeight = "1.5em";
+			// textElement.style.lineHeight = "1.15em";
 			textElement.style.whiteSpace = "wrap";
 			textElement.style.wordWrap = "break-word";
 		}
