@@ -272,7 +272,7 @@ function getReviewsHTML(simpleFormat = false) {
 			// Add an additional line with the reviews information (text "N) Recommended on DD-MM-YYYY")
 			let recommendedText = recommended ? "Recommended" : "NOT Recommended";
 			// text = "<p><b>" + number + " | " + recommendedText + "</b> (" + date + ")</p><p>" + text + "</p>";
-			text = "<p><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></p><p>" + text + "</p>";
+			text = "<span><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></span><span>" + text + "</span>";
 			// Add a dim background color based on the recommendation
 			textElement.style.color = "white";
 			textElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
