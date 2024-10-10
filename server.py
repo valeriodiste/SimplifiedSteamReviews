@@ -21,11 +21,10 @@ def get_reviews_api():
 	# Get the request's parameters
 	appid = request.args.get('appid')
 	english_only = request.args.get('english_only')
-	review_type = request.args.get('review_type')
 	# Get the reviews
-	reviews = get_reviews(appid, english_only, review_type)
+	reviews = get_reviews(appid, english_only)
 	return json.dumps(reviews)
-def get_reviews(appid, english_only, review_type):
+def get_reviews(appid, english_only=True):
 	# API infos
 	steamAPI = f"http://store.steampowered.com/appreviews/{appid}"
 	parameters = {
@@ -33,7 +32,7 @@ def get_reviews(appid, english_only, review_type):
 		"filter": "recent",	# [recent, updated, all]
 		"language": "english" if english_only else "all",
 		# "day_range": "365",
-		"review_type": review_type,	# [all, positive, negative]
+		"review_type": "all",	# [all, positive, negative]
 		"purchase_type": "all",		# [all, non_steam_purchase, steam_purchase]
 		"num_per_page": 100,
 		"filter_offtopic_activity": 1,	# Don't include review bombs (if detected)
@@ -74,6 +73,6 @@ def get_reviews(appid, english_only, review_type):
 # Test the function
 if __name__ == '__main__':
 	# Get reviews for the game "ROLL"
-	reviews = get_reviews(1585910)
+	reviews = get_reviews(1585910, english_only=True)
 	# Print the reviews with an indent
 	print(json.dumps(reviews, indent=4))

@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Send the form data as URL parameters to the server (take the "game", "english-only" and "review-type" values from the form)
 		let game = document.getElementsByName("game")[0].value;
 		let englishOnly = document.getElementsByName("english-only")[0].checked;
-		let reviewType = document.getElementsByName("review-type")[0].value;
+		// let reviewType = document.getElementsByName("review-type")[0].value;
 		// If the "game" is a numeric value, set the "appid" to the value of the "game", otherwise its a link, so extract the "appid" from the link
 		let appid;
 		if (!isNaN(game)) appid = game;
@@ -37,26 +37,35 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Store the last appid
 		lastAppid = appid;
 		// Send the request to the server
-		get_reviews(appid, englishOnly, reviewType);
+		get_reviews(appid, englishOnly);
 	});
 	// On click of the "sort-by" select, display the reviews
 	document.getElementById("sort-by").addEventListener("change", function () {
-		displayReviews();
+		refreshReviewsHTML();
 	});
-	// On click on the "read-aloud" button, read the reviews aloud
-	// document.getElementById("read-aloud").addEventListener("click", function () {
-	// 	// Get the text of the reviews
-	// 	let reviewsText = reviews.slice(0, 10).map(review => review["review"]).join(". . .");
-	// 	// Create a new SpeechSynthesisUtterance object
-	// 	let utterance = new SpeechSynthesisUtterance(reviewsText, { lang: "en-US" }, { rate: 1 });
-	// 	// Speak the text
-	// 	window.speechSynthesis.speak(utterance);
-	// 	// Debug a message
-	// 	console.log("Reading reviews aloud...");
-	// });
+	// On click of the "review-type" radio buttons, display the reviews
+	document.getElementsByName("review-type").forEach(radio => {
+		radio.addEventListener("change", function () {
+			refreshReviewsHTML();
+		});
+	});
+	// On click on the "download" button, open a new empty tab witht the reviews in a new tab (in their simple format)
+	document.getElementById("download").addEventListener("click", function () {
+		// Create a new tab with the reviews in a new tab (in their simple format)
+		let newTab = window.open();
+		newTab.document.write("<html><head><title>Reviews</title></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px;\"><div id='reviews-container'>" + getReviewsHTML(true) + "</div></body></html>");
+		// Notify that the new document is ready (stop loading)
+		newTab.document.close();
+	});
+
 });
 
-function get_reviews(appid, english_only, review_type) {
+function refreshReviewsHTML() {
+	let reviewsHTML = getReviewsHTML();
+	document.getElementById("reviews-container").innerHTML = reviewsHTML;
+}
+
+function get_reviews(appid, english_only = true) {
 	// API url
 	let apiURL = "https://panecaldoaldo.pythonanywhere.com/steam_reviews";
 	// Construct the URL parameters ("appid", "english_only", "review_type")
@@ -64,7 +73,7 @@ function get_reviews(appid, english_only, review_type) {
 	// Append the URL parameters
 	urlParams.append("appid", appid.toString());
 	urlParams.append("english_only", english_only.toString());
-	urlParams.append("review_type", review_type.toString());
+	// urlParams.append("review_type", review_type.toString());
 	// Fetch the API URL with the URL parameters
 	let requestURL = apiURL + "?" + urlParams.toString();
 	console.log("Sending request: " + requestURL);
@@ -72,16 +81,16 @@ function get_reviews(appid, english_only, review_type) {
 		.then(response => response.json())
 		.then(data => {
 			// Display the data in the "response" div
-			console.log(data);
+			console.log("> Found " + data.length + " reviews");
 			// Store the reviews
 			reviews = data;
 			// Display the reviews
-			displayReviews();
+			refreshReviewsHTML();
 		});
 }
 
 // Function to display the reviews
-function displayReviews() {
+function getReviewsHTML(simpleFormat = false) {
 	/*
 	{
 		"recommendationid": "176074338",
@@ -112,7 +121,7 @@ function displayReviews() {
 	}
 	*/
 	// Auxiliary function to get a review given the username, data, recommended bool value and text
-	function get_review_element(username, date, recommended, text) {
+	function get_review_element(username, date, recommended, text, number) {
 		/*
 		 <div class="review">
 			<div>
@@ -152,41 +161,62 @@ function displayReviews() {
 		dateRecommendedElement.appendChild(dateElement);
 		dateRecommendedElement.appendChild(recommendedElement);
 		// Create the text element
-		let textElement = document.createElement("div");
+		let textElement = document.createElement("p");
 		textElement.classList.add("text");
 		// Convert the text to HTML with also newlines, spaces, tabs, etc.
 		text = text.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
 		let text_lines = text.split("\n");
-		text = text_lines.join("</p><br/><p>");
-		textElement.innerHTML = "<p>" + text + "</p>";
+		text = "<span>" + text_lines.join("</span><br/><span>") + "</span>";
+		if (simpleFormat) {
+			// Add an additional line with the reviews information (text "N) Recommended on DD-MM-YYYY")
+			let recommendedText = recommended ? "Recommended" : "NOT Recommended";
+			// text = "<p><b>" + number + " | " + recommendedText + "</b> (" + date + ")</p><p>" + text + "</p>";
+			text = "<p><b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span></p><p>" + text + "</p>";
+			// Add a dim background color based on the recommendation
+			reviewElement.style.color = "white";
+			reviewElement.style.backgroundColor = recommended ? "#00ff0030" : "#ff000040";
+			reviewElement.style.padding = "0.1em 1em";
+			reviewElement.style.borderRadius = "0.5em";
+			reviewElement.style.marginBottom = "0.25em";
+		}
+		textElement.innerHTML = text;
 		// Append the username, date and recommended elements
 		firstDivElement.appendChild(usernameElement);
 		firstDivElement.appendChild(dateRecommendedElement);
 		// Append the first div element and the text element
-		reviewElement.appendChild(firstDivElement);
+		if (!simpleFormat) reviewElement.appendChild(firstDivElement);
 		reviewElement.appendChild(textElement);
 		return reviewElement;
 	}
 	// Display the reviews in the "reviews" div
-	let reviewsElement = document.getElementById("reviews-container");
+	// let reviewsElement = document.getElementById("reviews-container");
 	// Get the current sorting criteria
 	let sortingCriteria = document.getElementById("sort-by").value;
+	// Get the current review type to display
+	let reviewType = document.getElementsByName("review-type")[0].value;
 	// Sort the reviews based on the sorting criteria (either "recent" or "oldest")
 	if (sortingCriteria === "recent") {
 		reviews.sort((a, b) => b["timestamp_created"] - a["timestamp_created"]);
 	} else {
 		reviews.sort((a, b) => a["timestamp_created"] - b["timestamp_created"]);
 	}
-	// Clear the reviews
-	reviewsElement.innerHTML = "";
+	// // Clear the reviews
+	// reviewsElement.innerHTML = "";
+	let htmlToReturn = "";
 	// Display each review
-	for (let review of reviews) {
+	for (let i = 0; i < reviews.length; i++) {
+		// Get the current review
+		let review = reviews[i];
+		// Check if the review type matches
+		if (reviewType === "positive" && !review["voted_up"]) continue;
+		if (reviewType === "negative" && review["voted_up"]) continue;
 		// Get the review elements
 		let date = new Date(review["timestamp_created"] * 1000).toLocaleDateString();
 		let formattedDate = date.split("/").join("-");
-		let reviewElement = get_review_element(review["author"]["steamid"], formattedDate, review["voted_up"], review["review"]);
+		let reviewElement = get_review_element(review["author"]["steamid"], formattedDate, review["voted_up"], review["review"], i + 1);
 		// Append the review element
-		reviewsElement.appendChild(reviewElement);
+		// reviewsElement.appendChild(reviewElement);
+		htmlToReturn += reviewElement.outerHTML;
 	}
-
+	return htmlToReturn;
 }

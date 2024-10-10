@@ -92,18 +92,11 @@ form {
 	justify-content: center;
 	align-items: center;
 }
-form > div {
-	width: 100%;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	align-content: center;
-}
 form > div:not(:last-child) {
 	margin-bottom: 0.5em;
 }
 form > div > div {
-	width: 100%;
+	/* width: 100%; */
 	display: flex;
 	justify-content: first baseline;
 	align-items: center;
@@ -111,7 +104,28 @@ form > div > div {
 	font-size: 0.9em;
 }
 form > div > div:first-child {
-	margin-right: 0.5em;
+	margin-right: 1.5em;
+}
+.controls {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+	white-space: nowrap;
+}
+.game-controls {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+.results-controls {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	align-content: center;
 }
 input[type="text"] {
 	width: 71.25%;
@@ -133,6 +147,7 @@ button {
 	color: #eaeaea;
 	cursor: pointer;
 	/* font-weight: bold; */
+	white-space: nowrap;
 }
 button:hover {
 	background-color: #ffffff30;
@@ -155,7 +170,7 @@ input[type="checkbox"]:focus {
 	border: none;
 }
 select {
-	width: 100%;
+	/* width: 100%; */
 	border: none;
 	border-radius: 0.3125em;
 	padding: 0.3125em 0.5em;
@@ -234,6 +249,8 @@ select:focus {
 	justify-content: first baseline;
 	align-items: first baseline;
 	align-content: first baseline;
+	text-align: left;
+	width: 100%;
 }
 .review .recommended.positive {
 	background-color: #00ff00;
@@ -245,16 +262,13 @@ select:focus {
 .review .recommended:focus {
 	background-color: #ffffff70;
 }
-@media screen and (max-width: 1100px) {
-	body {
-		font-size: 35px;
-	}
-	/* .container {
-		max-width: 100%;
-	} */
-}
 p {
 	all: unset;
 	margin: 0;
 	padding: 0;
 }
+/* @media screen and (max-width: 1100px) {
+	body {
+		font-size: 35px;
+	}
+} */

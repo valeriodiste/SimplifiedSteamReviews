@@ -12,8 +12,9 @@
 		<div id="title">
 			<h1>Simplified Steam Reviews</h1>
 		</div>
-		<div id="description">
-			<!-- NOTE: the following descriptioin is long on purpose to allow the "Read Aloud" feature on Chrome browsers, which becomes available only if the first paragraph of the website is at least 270 characters long -->
+		<!-- Description for the page -->
+		<!-- NOTE: the following descriptioin is long on purpose to allow the "Read Aloud" feature on Chrome browsers, which becomes available only if the first paragraph of the website is at least 270 characters long -->
+		<!-- <div id="description">
 			<p>
 				<span>A simple visualizer for Steam user reviews.</span>
 				<span>Enter the Steam Game ID or URL, select the type of reviews you want to filter for (All, Positive, Negative), check the "English Only" box to only get english reviews.</span>
@@ -23,11 +24,11 @@
 			<p>
 				You may need to wait a few seconds for the reviews to load, depending on the number of reviews available for the game.
 			</p>
-		</div>
+		</div> -->
 		<!-- Form to make a request to the server -->
 		<div>
 			<form id="form">
-				<div>
+				<div class="controls results-controls">
 					<!-- Checkbox to define if we want only english reviews -->
 					 <div>
 						 <input type="checkbox" id="english-only" name="english-only" value="english-only" checked>
@@ -37,8 +38,8 @@
 					 <div>
 						 <select id="review-type" name="review-type">
 							 <option value="all">All Reviews</option>
-							 <option value="positive">Positive Reviews</option>
-							 <option value="negative">Negative Reviews</option>
+							 <option value="positive">Positive</option>
+							 <option value="negative">Negative</option>
 						</select>
 					 </div>
 					 <!-- Select field for the reviews sorting mode -->
@@ -48,12 +49,12 @@
 							 <option value="oldest">Least Recent</option>
 						</select>
 					 </div>
-					 <!-- Button to read the reviews aloud -->
-					 <!-- <div>
-						 <button id="read-aloud" type="button">LISTEN</button>
-					</div> -->
+					 <!-- Button to download currently displayed reviews as an HTML file -->
+					 <div>
+						 <button id="download" type="button">DOWNLOAD</button>
+					</div>
 				</div>
-				<div>
+				<div class="controls game-controls">
 					<!-- Input field to get the game ID or URL -->
 					<input type="text" id="game-id" name="game" required placeholder="Steam Game ID or URL">
 					<button type="submit" id="submit">GET REVIEWS</button>
@@ -62,7 +63,8 @@
 		</div>
 		<div id="reviews-container">
 			<!-- Reviews will be displayed here -->
-			 <!-- <div class="review">
+			<!-- 
+			<div class="review">
 				<div>
 					<a class="username" href="./">@username</a>
 					<div>
@@ -70,10 +72,11 @@
 						<a class="recommended positive" href="./"></a>
 					</div>
 				</div>
-				<div class="text">
+				<p class="text">
 					Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.
-				</div>
-			 </div> -->
+				</p>
+			</div>
+			-->
 		</div>
 	</div>
 	<script src="script.js"></script>
