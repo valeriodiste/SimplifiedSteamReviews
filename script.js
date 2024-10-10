@@ -65,10 +65,13 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Notify that the new document is ready (stop loading)
 		newTab.document.close();
 		// Also download the page as an HTML file
-		let downloadLink = document.createElement("a");
-		downloadLink.href = "data:text/html," + encodeURIComponent(newTabHTML);
-		downloadLink.download = "reviews_" + lastAppid + ".html";
-		downloadLink.click();
+		let downloadOnCLick = false;
+		if (downloadOnCLick) {
+			let downloadLink = document.createElement("a");
+			downloadLink.href = "data:text/html," + encodeURIComponent(newTabHTML);
+			downloadLink.download = "reviews_" + lastAppid + ".html";
+			downloadLink.click();
+		}
 	});
 	// On hold onto the download button for N seconds, visit the given URL (also works on mobile)
 	let downloadButton = document.getElementById("download");
