@@ -33,7 +33,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		// If the "game" is a numeric value, set the "appid" to the value of the "game", otherwise its a link, so extract the "appid" from the link
 		let appid;
 		if (!isNaN(game)) appid = game;
-		else appid = game.split("app/")[1].split("/")[0];
+		else if (game.includes("app/")) appid = game.split("app/")[1].split("/")[0];
+		else {
+			alert("Invalid game ID or URL!");
+			return;
+		}
 		// Store the last appid
 		lastAppid = appid;
 		// Send the request to the server
@@ -53,9 +57,15 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("download").addEventListener("click", function () {
 		// Create a new tab with the reviews in a new tab (in their simple format)
 		let newTab = window.open();
-		newTab.document.write("<html><head><title>Reviews</title></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px;\"><div id='reviews-container'>" + getReviewsHTML(true) + "</div></body></html>");
+		let newTabHTML = "<html><head><title>Reviews</title></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px;\"><div id='reviews-container'>" + getReviewsHTML(true) + "</div></body></html>";
+		newTab.document.write(newTabHTML);
 		// Notify that the new document is ready (stop loading)
 		newTab.document.close();
+		// Also download the page as an HTML file
+		let downloadLink = document.createElement("a");
+		downloadLink.href = "data:text/html," + encodeURIComponent(newTabHTML);
+		downloadLink.download = "reviews_" + lastAppid + ".html";
+		downloadLink.click();
 	});
 
 });

@@ -244,6 +244,7 @@ select:focus {
 .review .text {
 	/* Wrap if needed, but don't break words */
 	white-space: wrap;
+	overflow-wrap: break-word;
 	display: flex;
 	flex-direction: column;
 	justify-content: first baseline;
