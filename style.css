@@ -70,7 +70,7 @@ a {
 }
 #title:focus,
 #title:active {
-	color: #eaeaea55;
+	color: #eaeaea80;
 }
 #description {
 	font-size: 0.75em;
@@ -290,8 +290,8 @@ p {
 	margin: 0;
 	padding: 0;
 }
-/* @media screen and (max-width: 1100px) {
+@media screen and (max-width: 1100px) {
 	body {
 		font-size: 35px;
 	}
-} */
+}
