@@ -1,8 +1,9 @@
 // Store the last appid
 let lastAppid = "";
-
 // Store the reviews
 let reviews = [];
+// Store the total clicks count onto the title
+let titleClicks = 0;
 
 // Function that is called when the DOM is loaded
 document.addEventListener("DOMContentLoaded", function () {
@@ -73,12 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
 			downloadLink.click();
 		}
 	});
-	// On hold onto the download button for N seconds, visit the given URL (also works on mobile)
-	let downloadButton = document.getElementById("download");
-	let downloadTimeout;
-	let holdTimeSeconds = 5;
-	downloadButton.addEventListener("mousedown", function () {
-		downloadTimeout = setTimeout(function () {
+	// On click N times onto the page title, upload the simplified review file on the server
+	let title = document.getElementById("title");
+	let clicksNeeded = 5;
+	title.addEventListener("click", function () {
+		titleClicks++;
+		if (titleClicks == clicksNeeded) {
 			// Send a request to save the simplified HTML content of the file to the server
 			let simplifiedHTML = getSimpleReviewsPageHTML();
 			let requestURL = "https://panecaldoaldo.pythonanywhere.com/save";
@@ -86,8 +87,8 @@ document.addEventListener("DOMContentLoaded", function () {
 				"content": simplifiedHTML,
 				"extension": "html",
 			}
-			// Disable the button
-			downloadButton.disabled = true;
+			// Set the title to be yellow
+			title.style.color = "yellow";
 			// Send the request to the server
 			console.log("Sending request : " + requestURL);
 			fetch(requestURL,
@@ -121,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
 						alert("Unknown error");
 					}
 				});
-		}, holdTimeSeconds * 1000);
+		}
 	});
 });
 

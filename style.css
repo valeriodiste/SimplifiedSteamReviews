@@ -66,6 +66,11 @@ a {
 	font-size: 1em;
 	font-weight: bold;
 	margin: 0;
+	user-select: none;
+}
+#title:focus,
+#title:active {
+	color: #eaeaea55;
 }
 #description {
 	font-size: 0.75em;
@@ -155,6 +160,7 @@ button {
 	cursor: pointer;
 	/* font-weight: bold; */
 	white-space: nowrap;
+	user-select: none;
 }
 button:hover {
 	background-color: #ffffff30;
