@@ -70,6 +70,40 @@ def get_reviews(appid, english_only=True):
 		print(f"\r{len(reviews)} / {total_review_count} ({completion_percentage:.2f}%)", end="")
 	return reviews
 
+# Route to save a file locally on the server 
+@app.route('/save', methods=['POST'])
+def save_file():
+	try:
+		# Get the request's parameters from the body
+		content = request.json.get('content')
+		fileExtension = request.json.get('extension')
+		allowedExtensions = ['html', 'txt', 'json']
+		if not content:
+			return {
+				"status": "error",
+				"message": "Content not provided"
+			}
+		if not fileExtension or fileExtension not in allowedExtensions:
+			return {
+				"status": "error",
+				"message": f"Invalid file extension. Allowed extensions: {', '.join(allowedExtensions)}"
+			}
+		# Define the filename so that the file can be found in the given path
+		filename = "./mysite/static/saved." + fileExtension
+		fileURLResource = "/static/saved." + fileExtension
+		# Save the file to a local server file (create the file if it doesn't exist)
+		with open(filename, 'w') as file:
+			file.write(content)
+		return {
+			"status": "success",
+			"filename": fileURLResource
+		}
+	except Exception as e:
+		return {
+			"status": "error",
+			"message": str(e)
+	}
+
 # Test the function
 if __name__ == '__main__':
 	# Get reviews for the game "ROLL"

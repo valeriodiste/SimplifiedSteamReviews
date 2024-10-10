@@ -36,6 +36,13 @@ h1 {
 	width: 100%;
 	text-align: center;
 }
+a {
+	all: unset;
+	color: #eaeaea;
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold;
+}
 .container {
 	padding: 1.25em 0;
 	width: 100%;
@@ -180,6 +187,15 @@ select {
 select:focus {
 	outline: none;
 	border: none;
+}
+#debug {
+	width: 100%;
+	padding: 0 0.875em;
+	font-size: 0.9em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 #reviews-container {
 	/* width: 100%; */

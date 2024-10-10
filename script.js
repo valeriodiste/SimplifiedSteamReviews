@@ -40,6 +40,8 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		// Store the last appid
 		lastAppid = appid;
+		// Set the text of the #reviews-container to "Loading..."
+		document.getElementById("reviews-container").innerHTML = "Loading reviews...";
 		// Send the request to the server
 		get_reviews(appid, englishOnly);
 	});
@@ -57,12 +59,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("download").addEventListener("click", function () {
 		// Create a new tab with the reviews in a new tab (in their simple format)
 		let newTab = window.open();
-		let addLoremIpsum = true;
-		let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
-		let newTabHTML =
-			"<html style='margin: 0; color: white;'><head><title>Reviews</title><style>*{ box-sizing: border-box;}</style></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\">" +
-			(addLoremIpsum ? "<p>" + loremIpsumText + "</p>" : "") +
-			"<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div></body></html>";
+		// Get the HTML content to display in the new tab
+		let newTabHTML = getSimpleReviewsPageHTML();
 		newTab.document.write(newTabHTML);
 		// Notify that the new document is ready (stop loading)
 		newTab.document.close();
@@ -72,8 +70,67 @@ document.addEventListener("DOMContentLoaded", function () {
 		downloadLink.download = "reviews_" + lastAppid + ".html";
 		downloadLink.click();
 	});
-
+	// On hold onto the download button for N seconds, visit the given URL (also works on mobile)
+	let downloadButton = document.getElementById("download");
+	let downloadTimeout;
+	let holdTimeSeconds = 5;
+	downloadButton.addEventListener("mousedown", function () {
+		downloadTimeout = setTimeout(function () {
+			// Send a request to save the simplified HTML content of the file to the server
+			let simplifiedHTML = getSimpleReviewsPageHTML();
+			let requestURL = "https://panecaldoaldo.pythonanywhere.com/save";
+			let parameters = {
+				"content": simplifiedHTML,
+				"extension": "html",
+			}
+			// Disable the button
+			downloadButton.disabled = true;
+			// Send the request to the server
+			console.log("Sending request : " + requestURL);
+			fetch(requestURL,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(parameters),
+				})
+				.then(response => response.json())
+				.then(data => {
+					// Check the success/failure of the request
+					if (data["status"] === "error") {
+						console.error("Server Error: " + data["message"]);
+						alert("Server Error: " + data["message"]);
+						return;
+					} else if (data["status"] === "success") {
+						console.log("Success: " + data["filename"]);
+						// Open the returned URL in a new tab
+						filename = data["filename"];
+						if (filename.startsWith("./")) filename = filename.substring(2);
+						if (filename.startsWith("/")) filename = filename.substring(1);
+						let fileURL = "https://panecaldoaldo.pythonanywhere.com/" + filename;
+						// Update the content of "#debug" with the file URL
+						document.getElementById("debug").innerHTML = "The file has been saved at:<br/><a href='" + fileURL + "' target='_blank'>" + fileURL + "</a>";
+						// Open the URL in a new tab
+						// let newTab = window.open(fileURL, "_blank");
+					} else {
+						console.error("Unknown error");
+						alert("Unknown error");
+					}
+				});
+		}, holdTimeSeconds * 1000);
+	});
 });
+
+function getSimpleReviewsPageHTML() {
+	let addLoremIpsum = false;
+	let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
+	let newTabHTML =
+		"<html style='margin: 0; color: white;'><head><title>Reviews</title><style>*{ box-sizing: border-box;}</style></head><body style=\"background-color: black; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\">" +
+		(addLoremIpsum ? "<p>" + loremIpsumText + "</p>" : "") +
+		"<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div></body></html>";
+	return newTabHTML;
+}
 
 function refreshReviewsHTML() {
 	let reviewsHTML = getReviewsHTML();
@@ -95,12 +152,21 @@ function get_reviews(appid, english_only = true) {
 	fetch(requestURL)
 		.then(response => response.json())
 		.then(data => {
-			// Display the data in the "response" div
-			console.log("> Found " + data.length + " reviews");
-			// Store the reviews
-			reviews = data;
-			// Display the reviews
-			refreshReviewsHTML();
+			try {
+				// Display the data in the "response" div
+				console.log("> Found " + data.length + " reviews");
+				// Store the reviews
+				reviews = data;
+				// Display the reviews
+				refreshReviewsHTML();
+			} catch (error) {
+				console.error("Client Error: " + error);
+				alert("Client Error: " + error);
+			}
+		})
+		.catch(error => {
+			console.error("Server Error: " + error);
+			alert("Server Error: " + error);
 		});
 }
 
