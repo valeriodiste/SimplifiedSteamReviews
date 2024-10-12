@@ -150,7 +150,11 @@ function getSimpleReviewsPageHTML() {
 		"<html style='margin: 0; color: white;'>" +
 		"<head>" +
 		"<title>Reviews</title>" +
-		"<style>*{ box-sizing: border-box;} span { display:inline-block; }</style>" +
+		"<style>" +
+		"*{ box-sizing: border-box;}" +
+		"span { display:inline-block; }" +
+		"::-moz-selection { color: black; background: white; } ::selection { color: black; background: white; }" +
+		"</style>" +
 		"</head>" +
 		"<body style=\"background-color: #111111; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
 		(showIntroductoryText ?
