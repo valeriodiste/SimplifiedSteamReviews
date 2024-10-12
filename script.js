@@ -181,10 +181,21 @@ function refreshReviewsHTML() {
 	let autoTranslate = true;
 	if (reviews.length > 0) {
 		if (autoTranslate) {
-			let selectElement = document.querySelector("#google_translate_element .goog-te-combo");
+			let selectElement = document.querySelector("#google_translate_button select");
 			if (selectElement !== null) {
 				selectElement.value = "en";
+				// Simulate a change event
 				selectElement.dispatchEvent(new Event("change"));
+				// // Simulate a click event
+				// selectElement.dispatchEvent(new Event("click"));
+				// // Simulate a mouseup event
+				// selectElement.dispatchEvent(new Event("mouseup"));
+				// // Simulate a submit event
+				// selectElement.dispatchEvent(new Event("submit"));
+				// // Simulate a keyup event
+				// selectElement.dispatchEvent(new Event("keyup"));
+				// // Simulate a input event
+				// selectElement.dispatchEvent(new Event("input"));
 			}
 		}
 	}
