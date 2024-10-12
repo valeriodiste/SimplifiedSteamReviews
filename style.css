@@ -11,6 +11,8 @@ html, body {
 body {
 	font-size: 16px;
 	overflow-x: hidden;
+	position: relative !important;
+	top: 0 !important;
 }
 ::-webkit-scrollbar {
 	width: 0.625em;
@@ -28,14 +30,14 @@ body {
 ::-webkit-scrollbar-thumb:active {
 	background-color: #ffffff20;
 }
-::-moz-selection {
+/* ::-moz-selection {
 	color: black;
 	background: white;
 }
 ::selection {
 	color: black;
 	background: white;
-}
+} */
 h1, h2, h3, h4, h5, h6 {
 	margin: 0;
 	padding: 0;
@@ -54,13 +56,14 @@ a {
 .container {
 	padding: 1.25em 0;
 	width: 100%;
-	max-width: 31.25em;
+	max-width: 32.5em;
 	margin: 0 auto;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	position: relative;
 }
 .container > div {
 	width: 92%;
@@ -113,7 +116,7 @@ form {
 	align-items: center;
 }
 form > div:not(:last-child) {
-	margin-bottom: 0.5em;
+	margin-bottom: 0.35em;
 }
 form > div > div {
 	/* width: 100%; */
@@ -124,7 +127,7 @@ form > div > div {
 	font-size: 0.9em;
 }
 form > div > div:first-child {
-	margin-right: 1.5em;
+	margin-right: 1em;
 }
 .controls {
 	width: 100%;
@@ -147,16 +150,36 @@ form > div > div:first-child {
 	align-items: center;
 	align-content: center;
 }
-input[type="text"] {
-	width: 71.25%;
+input[type="text"],
+input[type="number"] {
+	width: 75%;
+	margin-right: 0.325em;
 	border: none;
 	font-size: 0.9em;
 	border-radius: 0.3125em;
 	padding: 0.5em 0.625em;
 }
-input[type="text"]:focus {
+input[type="text"]:focus,
+input[type="number"]:focus {
 	outline: none;
 	border: none;
+}
+input[type="number"] {
+	width: 95.25%;
+	font-size: 0.95em;
+	padding: calc(0.5em*0.9/0.95) calc(0.625em*0.9/0.95);
+	/* margin-right: 0.4em; */
+	/* font-weight: bold; */
+}
+/* Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+/* Firefox */
+input[type=number] {
+	-moz-appearance: textfield;
 }
 button {
 	border: none;
@@ -184,7 +207,7 @@ input[type="checkbox"] {
 	border-radius: 0.3125em;
 	cursor: pointer;
 	margin: 0;
-	margin-right: 0.3125em;
+	margin-right: 0.25em;
 }
 input[type="checkbox"]:focus {
 	outline: none;
@@ -194,8 +217,9 @@ select {
 	/* width: 100%; */
 	border: none;
 	border-radius: 0.3125em;
-	padding: 0.3125em 0.5em;
+	/* padding: 0.3125em 0.5em; */
 	font-size: 0.9em;
+	padding: 0.5em 0.625em;
 	margin-right: 0.3125em;
 }
 select:focus {
@@ -297,6 +321,30 @@ p {
 	all: unset;
 	margin: 0;
 	padding: 0;
+}
+/* Google translate options (to hide google translate elements on the page) */
+#google_translate_button,
+.skiptranslate {
+	/* Hide the google translate pages */
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: none;
+}
+.translate {
+	font-style: italic;
+}
+.translate::before {
+	content: "TRANSLATED";
+	width: 100%;
+	text-align: center;
+	font-style: normal;
+	font-weight: bold;
+	display: block;
+	background-color: #ffffff15;
+	padding: 0.25em 0.125em;
+	border-radius: 0.3125em;
+	margin-bottom: 0.5em;
 }
 @media screen and (max-width: 1100px) {
 	body {

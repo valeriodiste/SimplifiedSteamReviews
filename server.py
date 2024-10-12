@@ -20,7 +20,8 @@ if not running_locally:
 def get_reviews_api():
 	# Get the request's parameters
 	appid = request.args.get('appid')
-	english_only = request.args.get('english_only')
+	# english_only = request.args.get('english_only')
+	english_only = False
 	# Get the reviews
 	reviews = get_reviews(appid, english_only)
 	return json.dumps(reviews)

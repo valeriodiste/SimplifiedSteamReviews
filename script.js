@@ -13,8 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	if (appid !== null) {
 		// Fill the "game" input with the appid
 		document.getElementsByName("game")[0].value = appid;
-		// Store the last appid
-		lastAppid = appid;
 		// Empty the #debug element
 		document.getElementById("debug").innerHTML = "";
 		// Reset the title clicks
@@ -22,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Reset the color of the title
 		document.getElementById("title").style.color = "white";
 		// Send the request to the server
-		get_reviews(appid, true, "all");
+		get_reviews(appid);
 	}
 	// On click of the "submit" button on the form, send the form data to the server
 	document.getElementById("submit").addEventListener("click", function (e) {
@@ -35,8 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 		// Send the form data as URL parameters to the server (take the "game", "english-only" and "review-type" values from the form)
 		let game = document.getElementsByName("game")[0].value;
-		let englishOnly = document.getElementsByName("english-only")[0].checked;
-		// let reviewType = document.getElementsByName("review-type")[0].value;
 		// If the "game" is a numeric value, set the "appid" to the value of the "game", otherwise its a link, so extract the "appid" from the link
 		let appid;
 		if (!isNaN(game)) appid = game;
@@ -45,12 +41,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			alert("Invalid game ID or URL!");
 			return;
 		}
-		// Store the last appid
-		lastAppid = appid;
-		// Set the text of the #reviews-container to "Loading..."
-		document.getElementById("reviews-container").innerHTML = "Loading reviews...";
 		// Send the request to the server
-		get_reviews(appid, englishOnly);
+		get_reviews(appid);
 	});
 	// On click of the "sort-by" select, display the reviews
 	document.getElementById("sort-by").addEventListener("change", function () {
@@ -61,6 +53,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		radio.addEventListener("change", function () {
 			refreshReviewsHTML();
 		});
+	});
+	// On click of the "english-only" checkbox, display the reviews
+	document.getElementsByName("english-only")[0].addEventListener("change", function () {
+		refreshReviewsHTML();
+	});
+	// On change of the "min-length" number input, display the reviews
+	document.getElementById("min-length").addEventListener("change", function () {
+		refreshReviewsHTML();
 	});
 	// On click on the "download" button, open a new empty tab witht the reviews in a new tab (in their simple format)
 	document.getElementById("download").addEventListener("click", function () {
@@ -147,23 +147,23 @@ function getSimpleReviewsPageHTML() {
 	let loremIpsumText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
 	// Get the HTML content to display in the new tab
 	let newTabHTML =
-		"<html style='margin: 0; color: white;'>" +
+		"<html style='margin: 0; color: black;'>" +
 		"<head>" +
 		"<title>Reviews</title>" +
 		"<style>" +
 		"*{ box-sizing: border-box;}" +
 		"span { display:inline-block; }" +
-		"::-moz-selection { color: black; background: white; } ::selection { color: black; background: white; }" +
+		// "::-moz-selection { color: black; background: white; } ::selection { color: black; background: white; }" +
 		"</style>" +
 		"</head>" +
-		"<body style=\"background-color: #111111; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
+		"<body style=\"background-color: #f9fcfb; font-family:'Open Sans', sans-serif; font-size: 14px; margin: 0; padding: 1.5em 1.5em;\"><article>" +
 		(showIntroductoryText ?
 			"<h1>" + titleText + "</h1>" +
 			"<p>" + description + "</p>"
 			: (addLoremIpsum ? "<h1>" + loremIpsumTitle + "</h1><p>" + loremIpsumText + "</p>" : "")
 		) +
 		// "<div id='reviews-container' style='width: 100%;'>" + getReviewsHTML(true) + "</div>" +
-		getReviewsHTML(true) +
+		getReviewsHTML(true)[0] +
 		"</article>" +
 		"</body>" +
 		"</html>";
@@ -171,19 +171,41 @@ function getSimpleReviewsPageHTML() {
 }
 
 function refreshReviewsHTML() {
-	let reviewsHTML = getReviewsHTML();
+	let reviewsResults = getReviewsHTML();
+	let reviewsHTML = reviewsResults[0];
+	let shownReviews = reviewsResults[1];
 	document.getElementById("reviews-container").innerHTML = reviewsHTML;
+	// Display the reviews count in the debug element
+	if (reviews.length > 0) document.getElementById("debug").innerHTML = "<b>Showing " + shownReviews + " / " + reviews.length + " reviews</b>";
+	// Auto translate reviews by simulating a click onto the "#google_translate_button .goog-te-combo" select element with value "en"
+	let autoTranslate = true;
+	if (reviews.length > 0) {
+		if (autoTranslate) {
+			let selectElement = document.querySelector("#google_translate_element .goog-te-combo");
+			if (selectElement !== null) {
+				selectElement.value = "en";
+				selectElement.dispatchEvent(new Event("change"));
+			}
+		}
+	}
 }
 
-function get_reviews(appid, english_only = true) {
-	// API url
+function get_reviews(appid, force_refresh = false) {
+	// Check if we already have the reviews for the game with appid
+	if (lastAppid === appid && !force_refresh) {
+		console.log("Reviews already loaded for the game with appid: " + appid);
+		return;
+	}
+	// Set the text of the #reviews-container to "Loading..."
+	document.getElementById("reviews-container").innerHTML = "Loading reviews...";
+	// Store the last appid
+	lastAppid = appid;
+	// API URL
 	let apiURL = "https://panecaldoaldo.pythonanywhere.com/steam_reviews";
-	// Construct the URL parameters ("appid", "english_only", "review_type")
+	// Construct the URL parameters ("appid")
 	let urlParams = new URLSearchParams();
 	// Append the URL parameters
 	urlParams.append("appid", appid.toString());
-	urlParams.append("english_only", english_only.toString());
-	// urlParams.append("review_type", review_type.toString());
 	// Fetch the API URL with the URL parameters
 	let requestURL = apiURL + "?" + urlParams.toString();
 	console.log("Sending request: " + requestURL);
@@ -240,7 +262,7 @@ function getReviewsHTML(simpleFormat = false) {
 	}
 	*/
 	// Auxiliary function to get a review given the username, data, recommended bool value and text
-	function get_review_element(username, date, recommended, text, number) {
+	function get_review_element(username, date, recommended, text, language, number) {
 		/*
 		 <div class="review">
 			<div>
@@ -258,6 +280,7 @@ function getReviewsHTML(simpleFormat = false) {
 		// Create the review element
 		let reviewElement = document.createElement("div");
 		reviewElement.classList.add("review");
+		reviewElement.id = "review-" + number;
 		// Create the first div element
 		let firstDivElement = document.createElement("div");
 		// Create the username element
@@ -280,8 +303,30 @@ function getReviewsHTML(simpleFormat = false) {
 		dateRecommendedElement.appendChild(dateElement);
 		dateRecommendedElement.appendChild(recommendedElement);
 		// Create the text element
+		let isEnglish = language === "english";
 		let textElement = document.createElement("p");
 		textElement.classList.add("text");
+		if (!isEnglish) {
+			if (!simpleFormat) {
+				// Instruct the Google Translate API to translate the text once its original text is populated
+				textElement.classList.add("translate");
+			} else {
+				// Take the existing TRANSLATED text shown in the reviews HTML elements and translate it to English
+				let translatedTextPartsElement = document.querySelectorAll("#review-" + number + " .text span");
+				let translatedTextParts = [];
+				translatedTextPartsElement.forEach(element => {
+					translatedTextParts.push(element.innerHTML);
+				});
+				let translatedText = translatedTextParts.join("\n");
+				// Instruct the Google Translate API to NOT translate the text (already in english)
+				textElement.classList.add("notranslate");
+				textElement.classList.add("pretranslated");
+				text = translatedText;
+			}
+		} else {
+			// Instruct the Google Translate API to NOT translate the text (already in english)
+			textElement.classList.add("notranslate");
+		}
 		// Convert the text to HTML with also newlines, spaces, tabs, etc.
 		text = text.replace(/\t/g, "&nbsp;&nbsp;&nbsp;&nbsp;");
 		let text_lines = text.split("\n");
@@ -292,17 +337,19 @@ function getReviewsHTML(simpleFormat = false) {
 			// text = "<p><b>" + number + " | " + recommendedText + "</b> (" + date + ")</p><p>" + text + "</p>";
 			text =
 				"<span>" +
-				"<b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b> <span style='opacity: 0.3;'>(" + date + ")</span>" +
+				"<b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b>" +
+				"<elem style='opacity: 0.3;'>&nbsp;(" + date + ")</elem>" +
+				(!isEnglish ? "<br/><span style='opacity: 0.3; margin-top: 0.5em;'><b>TRANSLATED</b></span>" : "") +
 				"</span>" +
 				// "<br/>" +
-				"<span style='display:block;margin-top:0.25em;'>" +
+				"<span style='display:block; margin-top:0.25em; font-style: " + (isEnglish ? "normal" : "italic") + ";'>" +
 				text +
 				"</span>";
 			// Add a dim background color based on the recommendation
-			textElement.style.color = "white";
+			textElement.style.color = "black";
 			textElement.style.display = "block";
 			textElement.style.fontSize = "1em";
-			textElement.style.backgroundColor = recommended ? "#00ff0029" : "#ff000042";
+			textElement.style.backgroundColor = recommended ? "#00ff0050" : "#ff000042";
 			textElement.style.padding = "1em 1.3em";
 			textElement.style.borderRadius = "0.5em";
 			textElement.style.margin = "0 auto";
@@ -327,8 +374,12 @@ function getReviewsHTML(simpleFormat = false) {
 	// let reviewsElement = document.getElementById("reviews-container");
 	// Get the current sorting criteria
 	let sortingCriteria = document.getElementById("sort-by").value;
+	// Get the current "english-only" checkbox value
+	let englishOnly = document.getElementsByName("english-only")[0].checked;
 	// Get the current review type to display
 	let reviewType = document.getElementsByName("review-type")[0].value;
+	// get the current min length of the reviews
+	let minLength = document.getElementById("min-length").value;
 	// Sort the reviews based on the sorting criteria (either "recent" or "oldest")
 	if (sortingCriteria === "recent") {
 		reviews.sort((a, b) => b["timestamp_created"] - a["timestamp_created"]);
@@ -339,19 +390,32 @@ function getReviewsHTML(simpleFormat = false) {
 	// reviewsElement.innerHTML = "";
 	let htmlToReturn = "";
 	// Display each review
+	let reviewsShown = 0;
 	for (let i = 0; i < reviews.length; i++) {
 		// Get the current review
 		let review = reviews[i];
 		// Check if the review type matches
 		if (reviewType === "positive" && !review["voted_up"]) continue;
 		if (reviewType === "negative" && review["voted_up"]) continue;
+		// Check if the review is in English
+		if (englishOnly && review["language"] !== "english") continue;
+		// Check if the review has a minimum length (in words)
+		if (minLength > 0) {
+			// Use a regex to split the words by spaces, tabs, newlines, etc.
+			let words = review["review"].split(/\s+/);
+			if (words.length < minLength) continue;
+		}
 		// Get the review elements
 		let date = new Date(review["timestamp_created"] * 1000).toLocaleDateString();
 		let formattedDate = date.split("/").join("-");
-		let reviewElement = get_review_element(review["author"]["steamid"], formattedDate, review["voted_up"], review["review"], i + 1);
+		let reviewElement = get_review_element(review["author"]["steamid"], formattedDate, review["voted_up"], review["review"], review["language"], i + 1);
 		// Append the review element
-		// reviewsElement.appendChild(reviewElement);
 		htmlToReturn += reviewElement.outerHTML;
+		// Increment the reviews shown
+		reviewsShown++;
 	}
-	return htmlToReturn;
+	return [htmlToReturn, reviewsShown];
 }
+
+
+

@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-	<div class="container">
+	<div class="container notranslate">
 		<div id="title">
 			<!-- NOTE: title is used to activate some advanced functionalities on click onto it, don't remove it -->
 			<h1>Simplified Steam Reviews</h1>
@@ -32,8 +32,8 @@
 				<div class="controls results-controls">
 					<!-- Checkbox to define if we want only english reviews -->
 					 <div>
-						 <input type="checkbox" id="english-only" name="english-only" value="english-only" checked>
-						 <label for="english-only">English Only</label>
+						 <input type="checkbox" id="english-only" name="english-only" value="english-only">
+						 <label for="english-only">English</label>
 					</div>
 					<!-- Select field to choose the review type (ALL, POSITIVE, NEGATIVE) -->
 					 <div>
@@ -46,10 +46,14 @@
 					 <!-- Select field for the reviews sorting mode -->
 					 <div>
 						 <select id="sort-by">
-							 <option value="recent">Most Recent</option>
-							 <option value="oldest">Least Recent</option>
+							 <option value="recent">Newest</option>
+							 <option value="oldest">Oldest</option>
 						</select>
 					 </div>
+					 <!-- Input field to insert a min length for reviews to be filtered -->
+					 <div>
+						 <input type="number" id="min-length" name="min-length" placeholder="Min words" min="0">
+					</div>
 					 <!-- Button to download currently displayed reviews as an HTML file -->
 					 <div>
 						 <button id="download" type="button">DOWNLOAD</button>
@@ -81,5 +85,17 @@
 			-->
 		</div>
 	</div>
+	<div id="google_translate_button"></div>
 	<script src="script.js"></script>
+	<script tyep="text/javascript">
+		// Use google translate's javascript library from translate.google.com to translate the text from the detected language to english
+		function googleTranslateElementInit() {
+			new google.translate.TranslateElement({
+				// pageLanguage: 'en',
+				includedLanguages: 'en',
+				// layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+			}, 'google_translate_button');
+		}
+	</script>
+	<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </html>
