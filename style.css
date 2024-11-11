@@ -114,6 +114,7 @@ form {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	font-size: 0.9em;
 }
 form > div:not(:last-child) {
 	margin-bottom: 0.35em;
@@ -124,10 +125,19 @@ form > div > div {
 	justify-content: first baseline;
 	align-items: center;
 	align-content: center;
-	font-size: 0.9em;
 }
 form > div > div:first-child {
-	margin-right: 1em;
+	margin-right: 0.5em;
+}
+.checkbox-container {
+	display: flex;
+	justify-content: first baseline;
+	align-items: center;
+	align-content: center;
+	font-size: 0.9em;
+}
+label {
+	cursor: pointer;
 }
 .controls {
 	width: 100%;
@@ -137,7 +147,24 @@ form > div > div:first-child {
 	align-content: center;
 	white-space: nowrap;
 }
+.controls.collapsed {
+	display: none;
+}
+.sub-controls {
+	display: inline-flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
 .game-controls {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+.advanced-controls {
 	display: flex;
 	width: 100%;
 	justify-content: space-between;
@@ -152,7 +179,7 @@ form > div > div:first-child {
 }
 input[type="text"],
 input[type="number"] {
-	width: 75%;
+	width: 100%;
 	margin-right: 0.325em;
 	border: none;
 	font-size: 0.9em;
@@ -234,6 +261,12 @@ select:focus {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+}
+.sub-controls:has(#filter) {
+	width: 60%;
+}
+div:has(> #filter) {
+	margin-right: 0.375em;
 }
 #reviews-container {
 	/* width: 100%; */
@@ -321,6 +354,17 @@ p {
 	all: unset;
 	margin: 0;
 	padding: 0;
+}
+#tooltip {
+	position: absolute;
+	/* background-color: #575757; */
+	background-color: #000000cc;
+	width: 20em;
+	padding: 0.5em 0.625em;
+	border-radius: 0.3125em;
+	font-size: 0.75em;
+	z-index: 999;
+	pointer-events: none;
 }
 /* Google translate options (to hide google translate elements on the page) */
 #google_translate_button,

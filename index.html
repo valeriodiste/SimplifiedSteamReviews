@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+	<div id="tooltip" class="notranslate"></div>
 	<div class="container notranslate">
 		<div id="title">
 			<!-- NOTE: title is used to activate some advanced functionalities on click onto it, don't remove it -->
@@ -28,15 +29,15 @@
 		</div> -->
 		<!-- Form to make a request to the server -->
 		<div>
-			<form id="form">
+			<form id="form" novalidate>
 				<div class="controls results-controls">
 					<!-- Checkbox to define if we want only english reviews -->
-					 <div>
+					 <div class="checkbox-container" tooltip="Only show reviews in English (checked) or also show non english reviews translated to English (unchecked)">
 						 <input type="checkbox" id="english-only" name="english-only" value="english-only">
-						 <label for="english-only">English</label>
+						 <label for="english-only">ENGLISH</label>
 					</div>
 					<!-- Select field to choose the review type (ALL, POSITIVE, NEGATIVE) -->
-					 <div>
+					 <div tooltip="Show all reviews or only positive or negative reviews">
 						 <select id="review-type" name="review-type">
 							 <option value="all">All Reviews</option>
 							 <option value="positive">Positive</option>
@@ -44,25 +45,42 @@
 						</select>
 					 </div>
 					 <!-- Select field for the reviews sorting mode -->
-					 <div>
+					 <div tooltip="Sort reviews by most recent or least recent">
 						 <select id="sort-by">
 							 <option value="recent">Newest</option>
 							 <option value="oldest">Oldest</option>
 						</select>
 					 </div>
 					 <!-- Input field to insert a min length for reviews to be filtered -->
-					 <div>
+					 <div tooltip="Filter out reviews with less than the specified number of words">
 						 <input type="number" id="min-length" name="min-length" placeholder="Min words" min="0">
 					</div>
-					 <!-- Button to download currently displayed reviews as an HTML file -->
-					 <div>
-						 <button id="download" type="button">DOWNLOAD</button>
+					 <!-- Button to trigger advanced options -->
+					 <div tooltip="Show advanced options">
+						<button id="advanced" type="button">ADVANCED</button>
+				   </div>
+				</div>
+				<div class="controls advanced-controls collapsed">
+					<div class="sub-controls">
+						<!-- Input field to filter reviews -->
+						<div tooltip="Filter reviews by words (exact matches or match any word)">
+							<input type="text" id="filter" name="filter" placeholder="Filter reviews by words" autocomplete="on">
+						</div>
+						<!-- Checkbox to indicate whether to filter based on an exact match or not -->
+						<div class="checkbox-container" tooltip="Whether to filter reviews based on an exact match (checked) or match any word (unchecked)">
+							<input type="checkbox" id="exact-match" name="exact-match" value="exact-match">
+							<label for="exact-match">EXACT MATCH</label>
+						</div>
+					</div>
+					<!-- Button to open the currently displayed reviews in a new tab in a simlified display as an HTML file (that can be downloaded) -->
+					<div tooltip="Open the reviews in a new tab in a simplified display (as a single HTML file that can be downloaded)">
+						<button id="reader-mode" type="button">READER</button>
 					</div>
 				</div>
 				<div class="controls game-controls">
 					<!-- Input field to get the game ID or URL -->
-					<input type="text" id="game-id" name="game" required placeholder="Steam Game ID or URL" autocomplete="on">
-					<button type="submit" id="submit">GET REVIEWS</button>
+					<input type="text" id="game-id" name="game" required placeholder="Steam Game ID or URL" autocomplete="on" tooltip="Enter a Steam game's ID or store page URL">
+					<button type="submit" id="submit" tooltip="Get all reviews for the given steam game (may take some seconds)">GET REVIEWS</button>
 			   </div>
 			</form>
 		</div>

@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		e.preventDefault();
 		// If the "game" was not provided, prevent the form submission
 		if (document.getElementsByName("game")[0].value === "") {
-			alert("Please provide a game!");
+			alert("Please provide a game ID or store page URL!");
 			return;
 		}
 		// Send the form data as URL parameters to the server (take the "game", "english-only" and "review-type" values from the form)
@@ -62,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function () {
 	document.getElementById("min-length").addEventListener("change", function () {
 		refreshReviewsHTML();
 	});
-	// On click on the "download" button, open a new empty tab witht the reviews in a new tab (in their simple format)
-	document.getElementById("download").addEventListener("click", function () {
+	// On click on the "reader-mode" button, open a new empty tab witht the reviews in a new tab (in their simple format)
+	document.getElementById("reader-mode").addEventListener("click", function () {
 		// Create a new tab with the reviews in a new tab (in their simple format)
 		let newTab = window.open();
 		// Get the HTML content to display in the new tab
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		newTab.document.write(newTabHTML);
 		// Notify that the new document is ready (stop loading)
 		newTab.document.close();
-		// Also download the page as an HTML file
+		// Also download the page as an HTML file (if needed)
 		let downloadOnCLick = false;
 		if (downloadOnCLick) {
 			let downloadLink = document.createElement("a");
@@ -80,7 +80,22 @@ document.addEventListener("DOMContentLoaded", function () {
 			downloadLink.click();
 		}
 	});
-	// On click N times onto the page title, upload the simplified review file on the server
+	// On click of the "advanced" button, toggle the advanced options
+	document.getElementById("advanced").addEventListener("click", function () {
+		// Toggle the advanced options (with class ".advanced-controls") by toggling class "collapsed"
+		let advancedOptions = document.querySelector(".advanced-controls");
+		advancedOptions.classList.toggle("collapsed");
+	});
+	// On input on input text element "#filter" filter the reviews based on the text (simply refresh reviews to display the filtered reviews)
+	document.getElementById("filter").addEventListener("change", function () {
+		refreshReviewsHTML();
+	});
+	// On change of the "exact-match" checkbox, display the reviews
+	document.getElementsByName("exact-match")[0].addEventListener("change", function () {
+		refreshReviewsHTML();
+	});
+
+	// DEBUG FUNCTIONS: On click N times onto the page title, upload the simplified review file on the server
 	let title = document.getElementById("title");
 	let clicksNeeded = 5;
 	title.addEventListener("click", function () {
@@ -130,6 +145,41 @@ document.addEventListener("DOMContentLoaded", function () {
 				});
 		}
 	});
+
+
+	// To all elements with a "tooltip=..." attribute, add a tooltip on hover (using the "#tooltip" element in the HTML)
+	let tooltip = document.getElementById("tooltip");
+	let tooltipElements = document.querySelectorAll("[tooltip]");
+	tooltip.style.display = "none";
+	for (let i = 0; i < tooltipElements.length; i++) {
+		tooltipElements[i].addEventListener("mouseenter", function (e) {
+			// Get the tooltip text
+			let tooltipText = e.target.getAttribute("tooltip");
+			if (tooltipText === null) return;
+			// Check if the tooltip text is different from the previous one
+			if (tooltip.innerHTML === tooltipText && tooltip.style.display === "block") return;
+			// Set the tooltip text
+			tooltip.innerHTML = tooltipText;
+			// Display the tooltip
+			tooltip.style.display = "block";
+		});
+		tooltipElements[i].addEventListener("mouseleave", function () {
+			tooltip.style.display = "none";
+		});
+	}
+	// Track mouse position and update the tooltip position
+	document.addEventListener("mousemove", function (e) {
+		let tooltip = document.getElementById("tooltip");
+		if (tooltip.style.display === "none") return;
+		let tooltipOffset = 10;
+		tooltip.style.left = e.clientX + tooltipOffset + "px";
+		tooltip.style.top = e.clientY + tooltipOffset + "px";
+	});
+	// On mouse click on anything, hide the tooltip
+	document.addEventListener("click", function () {
+		document.getElementById("tooltip").style.display = "none";
+	});
+
 });
 
 function getSimpleReviewsPageHTML() {
@@ -186,16 +236,6 @@ function refreshReviewsHTML() {
 				selectElement.value = "en";
 				// Simulate a change event
 				selectElement.dispatchEvent(new Event("change"));
-				// // Simulate a click event
-				// selectElement.dispatchEvent(new Event("click"));
-				// // Simulate a mouseup event
-				// selectElement.dispatchEvent(new Event("mouseup"));
-				// // Simulate a submit event
-				// selectElement.dispatchEvent(new Event("submit"));
-				// // Simulate a keyup event
-				// selectElement.dispatchEvent(new Event("keyup"));
-				// // Simulate a input event
-				// selectElement.dispatchEvent(new Event("input"));
 			}
 		}
 	}
@@ -371,6 +411,37 @@ function getReviewsHTML(simpleFormat = false) {
 			textElement.style.whiteSpace = "wrap";
 			textElement.style.wordWrap = "break-word";
 		}
+		// Function to highlight words that match the filter text
+		function highlight_text(textToHighlight, filterText, exactMatch) {
+			// Check if the filter text is empty
+			if (filterText === "" || filterText === null || filterText.length === 0) return textToHighlight;
+			// Highlight color
+			let highlightColor = "#ff880070";
+			// Highlight text
+			if (exactMatch) {
+				// Exact match
+				textToHighlight = textToHighlight.replace(new RegExp("(" + filterText + ")", "gi"), "<span style='background-color: " + highlightColor + ";'>$1</span>");
+			} else {
+				// Partial match
+				let filterWords = filterText.split(/\s+/);
+				for (let i = 0; i < filterWords.length; i++) {
+					textToHighlight = textToHighlight.replace(new RegExp("(" + filterWords[i] + ")", "gi"), "<span style='background-color: " + highlightColor + ";'>$1</span>");
+				}
+			}
+			return textToHighlight;
+		}
+		// Highlight the text based on the filter text
+		if (!simpleFormat) {
+			// // Highlight the text based on the filter text
+			text = highlight_text(text, filterText, exactMatch);
+			// Whenever the text of the review changes (because of the Google Translate API), highlight the text again
+			textElement.addEventListener("DOMSubtreeModified", function () {
+				// Highlight the text based on the filter text
+				let text = highlight_text(textElement.innerHTML, filterText, exactMatch);
+				textElement.innerHTML = text;
+			});
+		}
+		// Set the text of the text element
 		textElement.innerHTML = text;
 		// Append the username, date and recommended elements
 		firstDivElement.appendChild(usernameElement);
@@ -391,6 +462,9 @@ function getReviewsHTML(simpleFormat = false) {
 	let reviewType = document.getElementsByName("review-type")[0].value;
 	// get the current min length of the reviews
 	let minLength = document.getElementById("min-length").value;
+	// Get the filter text and exact match checkbox value
+	let filterText = document.getElementById("filter").value;
+	let exactMatch = document.getElementsByName("exact-match")[0].checked;
 	// Sort the reviews based on the sorting criteria (either "recent" or "oldest")
 	if (sortingCriteria === "recent") {
 		reviews.sort((a, b) => b["timestamp_created"] - a["timestamp_created"]);
@@ -415,6 +489,25 @@ function getReviewsHTML(simpleFormat = false) {
 			// Use a regex to split the words by spaces, tabs, newlines, etc.
 			let words = review["review"].split(/\s+/);
 			if (words.length < minLength) continue;
+		}
+		// Check if the review matches the filter text or not
+		if (filterText !== "" && filterText !== null && filterText.length > 0) {
+			// Check if the review contains any of the filter words (exact match or partial match)
+			let matches_filter = false;
+			if (exactMatch) {
+				// Exact match
+				if (review["review"].toLowerCase().includes(filterText.toLowerCase())) matches_filter = true;
+			} else {
+				// Partial match (at least one word)
+				let filterWords = filterText.split(/\s+/);
+				for (let i = 0; i < filterWords.length; i++) {
+					if (review["review"].toLowerCase().includes(filterWords[i].toLowerCase())) {
+						matches_filter = true;
+						break;
+					}
+				}
+			}
+			if (!matches_filter) continue;
 		}
 		// Get the review elements
 		let date = new Date(review["timestamp_created"] * 1000).toLocaleDateString();
