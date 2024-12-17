@@ -390,7 +390,7 @@ function getReviewsHTML(simpleFormat = false) {
 				"<span>" +
 				"<b>" + number + " | <a style='all: unset; text-decoration: underline; cursor:pointer;' href='https://steamcommunity.com/profiles/" + username + "' target='_blank'>" + recommendedText + "</a></b>" +
 				"<elem style='opacity: 0.3;'>&nbsp;(" + date + ")</elem>" +
-				(!isEnglish ? "<br/><span style='opacity: 0.3; margin-top: 0.5em;'><b>TRANSLATED</b></span>" : "") +
+				(!isEnglish ? "<br/><span style='opacity: 0.3; margin-top: 0.5em;'><b>TRANSLATED</b></span><span style='opacity: 0;'>.</span>" : "") +
 				"</span>" +
 				// "<br/>" +
 				"<span style='display:block; margin-top:0.25em; font-style: " + (isEnglish ? "normal" : "italic") + ";'>" +
